@@ -1,0 +1,22 @@
+[default]
+fuzz_runs = 1024
+libs = ['node_modules']
+optimizer = true
+optimizer_runs = 999999
+solc_version = '0.8.17'
+out = 'out'
+remappings = [
+    '@ensdomains/=node_modules/@ensdomains/',
+    '@openzeppelin/=node_modules/@openzeppelin/',
+    'hardhat/=node_modules/hardhat/',
+    '@uniswap/=node_modules/@uniswap/',
+]
+src = 'contracts/BotGuard.sol'
+test = 'test'
+gas_reports = ["*"]
+bytecode_hash = "none"
+extra_output_files = [
+    "metadata",
+    "abi"
+]
+outputSelection.abi = true

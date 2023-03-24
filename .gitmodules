@@ -1,0 +1,3 @@
+[submodule "contracts/seadrop"]
+	path = contracts/seadrop
+	url = git@github.com:r1cs/seadrop.git

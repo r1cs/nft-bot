@@ -1,0 +1,41 @@
+{
+  "name": "rollup-contracts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "forge build -o out --root ./",
+    "clean": "forge clean",
+    "test": "forge test -vvv --root ./",
+    "gasnap": "forge snapshot",
+    "format": "prettier --write 'contracts/**/*.sol'",
+    "fmt": "prettier --write 'contracts/*.sol' && js-beautify --r scripts/*.js ",
+    "format-lint": "prettier --list-different 'contracts/**/*.sol'",
+    "solhint": "solhint 'contracts/**/*.sol'",
+    "abigen": "bash scripts/abigen.bash",
+    "go": "bash scripts/build-go.bash"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.6",
+    "@nomiclabs/hardhat-etherscan": "^3.1.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.0",
+    "chai": "^4.2.0",
+    "ethereum-waffle": "^3.0.0",
+    "ethers": "^5.6.5",
+    "hardhat": "^2.8.0",
+    "prettier": "^2.5.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "solhint": "^3.3.6"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.1",
+    "@openzeppelin/contracts-upgradeable": "^4.6.0",
+    "@openzeppelin/hardhat-upgrades": "^1.17.0",
+    "js-beautify": "^1.14.4",
+    "@uniswap/lib": "^4.0.1-alpha",
+    "@uniswap/v2-core": "1.0.1",
+    "@uniswap/v3-core": "1.0.0",
+    "base64-sol": "1.0.1",
+    "@uniswap/v3-periphery": "^1.4.3"
+  }
+}

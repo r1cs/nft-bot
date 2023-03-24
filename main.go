@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -13,9 +14,47 @@ import (
 	"math/big"
 	"net/http"
 	"net/url"
+	"os"
 )
 
+type A struct {
+	TraitType string      `json:"trait_type"`
+	Value     interface{} `json:"value"`
+}
+type Info struct {
+	Attributes []A `json:"attributes"`
+}
+
+func store() {
+	data, err := os.ReadFile("ipfs_data.txt")
+	utils.Ensure(err)
+
+	luckNumber := make([]float64, 0)
+
+	var info Info
+	newData := make([]byte, 0)
+	i := 0
+	for _, b := range data {
+		newData = append(newData, b)
+		if b == '}' {
+			i++
+		}
+		if i == 3 {
+			i = 0
+			if err := json.Unmarshal(newData, &info); err != nil {
+				panic(err)
+			}
+			if info.Attributes[0].Value == "Archive Lv 1.0" {
+				luckNumber = append(luckNumber, info.Attributes[1].Value.(float64))
+			}
+			newData = newData[:0]
+		}
+	}
+	fmt.Println(luckNumber)
+}
+
 var m map[uint64]bool = func() map[uint64]bool {
+
 	m := make(map[uint64]bool)
 	point := []uint64{1615, 1643, 1755, 1783, 1895, 1923, 2035, 2063, 2175, 2203, 2315, 1343, 2455, 2483}
 	for _, p := range point {
@@ -29,7 +68,7 @@ func nextIsRare(tokenId *big.Int) bool {
 }
 
 func main() {
-	runNFT()
+	store()
 }
 
 func runNFT() {
