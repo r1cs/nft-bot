@@ -16,7 +16,6 @@ test = 'test'
 gas_reports = ["*"]
 bytecode_hash = "none"
 extra_output_files = [
-    "metadata",
     "abi"
 ]
 outputSelection.abi = true

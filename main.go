@@ -2,19 +2,14 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/rpc"
-	"github.com/laizy/web3/utils"
 	"github.com/r1cs/nft-bot/binding"
+	"github.com/r1cs/nft-bot/tools"
 	"math/big"
-	"net/http"
-	"net/url"
-	"os"
 )
 
 type A struct {
@@ -23,34 +18,6 @@ type A struct {
 }
 type Info struct {
 	Attributes []A `json:"attributes"`
-}
-
-func store() {
-	data, err := os.ReadFile("ipfs_data.txt")
-	utils.Ensure(err)
-
-	luckNumber := make([]float64, 0)
-
-	var info Info
-	newData := make([]byte, 0)
-	i := 0
-	for _, b := range data {
-		newData = append(newData, b)
-		if b == '}' {
-			i++
-		}
-		if i == 3 {
-			i = 0
-			if err := json.Unmarshal(newData, &info); err != nil {
-				panic(err)
-			}
-			if info.Attributes[0].Value == "Archive Lv 1.0" {
-				luckNumber = append(luckNumber, info.Attributes[1].Value.(float64))
-			}
-			newData = newData[:0]
-		}
-	}
-	fmt.Println(luckNumber)
 }
 
 var m map[uint64]bool = func() map[uint64]bool {
@@ -68,40 +35,37 @@ func nextIsRare(tokenId *big.Int) bool {
 }
 
 func main() {
-	store()
+
+}
+
+func runBot(client *ethclient.Client, seaDrop *binding.ISeaDrop, erc721A *binding.IERC721A) {
+
+}
+
+func Ensure(err error) {
+	if err != nil {
+		panic(any(err))
+	}
 }
 
 func runNFT() {
 	limit := 1
+	client, err := tools.NewEthClientWithProxy("https://bsc-dataseed1.defibit.io/", "http://localhost:7890")
 
-	proxyURL, err := url.Parse("http://localhost:7890")
-	if err != nil {
-		panic(err)
-	}
-
-	// 创建 HTTP 客户端
-	httpClient := &http.Client{
-		Transport: &http.Transport{
-			Proxy: http.ProxyURL(proxyURL),
-		}}
-
-	c, err := rpc.DialOptions(context.Background(), "https://bsc-dataseed1.defibit.io/", rpc.WithHTTPClient(httpClient))
-	utils.Ensure(err)
-	client := ethclient.NewClient(c)
 	start, err := client.BlockNumber(context.Background())
-	utils.Ensure(err)
+	Ensure(err)
 	fmt.Println(start)
 
 	//airdrop, err := binding.NewISeaDrop(common.HexToAddress("0x00005ea00ac477b1030ce78506496e8c2de24bf5"), client)
 	//utils.Ensure(err)
 
 	pmoDrop, err := binding.NewIERC721A(common.HexToAddress("0xd8DE41A2AE0E1D0e863E494F45B869789963b35d"), client)
-	utils.Ensure(err)
+	Ensure(err)
 	totalSupply, err := pmoDrop.TotalSupply(nil)
-	utils.Ensure(err)
+	Ensure(err)
 	fmt.Println(totalSupply)
 	esIterator, err := pmoDrop.FilterTransfer(&bind.FilterOpts{Start: start}, []common.Address{common.Address{}}, nil, nil)
-	utils.Ensure(err)
+	Ensure(err)
 	for esIterator.Next() {
 		e := esIterator.Event
 		log.Info("pmo minted", "id", e.TokenId, "from", e.From, "to", e.To)
